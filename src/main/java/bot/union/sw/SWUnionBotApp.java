@@ -8,10 +8,10 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @EnableAutoConfiguration
 @PropertySource("classpath:secret.properties")
-public class WeatherBotApp {
+public class SWUnionBotApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(WeatherBotApp.class);
+        SpringApplication.run(SWUnionBotApp.class);
     }
 
 }
