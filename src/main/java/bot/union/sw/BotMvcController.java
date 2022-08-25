@@ -27,7 +27,7 @@ public class BotMvcController  implements TelegramMvcController {
     @BotRequest(type = {MessageType.ANY})
     public void optionMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request){
         bot.execute(new SendMessage(chat.id(), "Добро пожаловать!"));
-        bot.execute(new SendMessage(chat.id(), "Я бот компании 'Объединение Северо-Запад'"));
+        bot.execute(new SendMessage(chat.id(), "Я бот компании 'Спецобъединение Северо-Запад'"));
         bot.execute(new SendMessage(chat.id(), "Я пока ничего не умею, но скоро меня научат"));
    }
 
