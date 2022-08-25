@@ -11,20 +11,22 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "bot_users")
+@Table(name = "scenarios")
 @Getter
 @Setter
 @NoArgsConstructor
-public class BotUser {
+public class Scenarios {
 
-    @Column(name="chat_id")
-    Long chatId;
-    @Column(name="email")
-    String email;
-    @Column(name="login")
-    String login;
-    @Column(name="domain_name")
-    String domainName;
+    @ManyToOne
+    BotUser botUser;
+    @Column(name="order")
+    Integer order;
+    @Column(name="current")
+    String identifier;
+    @Column(name = "current_stage")
+    String currentStage;
+    Boolean started;
+    Boolean done;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
