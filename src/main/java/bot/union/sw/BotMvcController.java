@@ -1,5 +1,6 @@
 package bot.union.sw;
 
+import bot.union.sw.services.BotService;
 import com.github.kshashov.telegram.api.MessageType;
 import com.github.kshashov.telegram.api.TelegramMvcController;
 import com.github.kshashov.telegram.api.TelegramRequest;
@@ -18,6 +19,8 @@ public class BotMvcController  implements TelegramMvcController {
 
     @Autowired
     private BotConfig botConfig;
+    @Autowired
+    private BotService botService;
 
     @Override
     public String getToken() {
@@ -26,9 +29,14 @@ public class BotMvcController  implements TelegramMvcController {
 
     @BotRequest(type = {MessageType.ANY})
     public void optionMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request){
-        bot.execute(new SendMessage(chat.id(), "Добро пожаловать!"));
-        bot.execute(new SendMessage(chat.id(), "Я бот компании 'Спецобъединение Северо-Запад'"));
-        bot.execute(new SendMessage(chat.id(), "Я пока ничего не умею, но скоро меня научат"));
+
+        botService.setCurrentChat(chat);
+        botService.load();
+
+        botService.doWork(mes, bot, chat, fullMes, request);
+
+        botService.save();
+
    }
 
 }

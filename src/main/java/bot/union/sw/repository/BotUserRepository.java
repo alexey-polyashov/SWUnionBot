@@ -1,6 +1,6 @@
 package bot.union.sw.repository;
 
-import bot.union.sw.entyties.BotUser;
+import bot.union.sw.entities.BotUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

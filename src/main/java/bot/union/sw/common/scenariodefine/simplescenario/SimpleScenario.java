@@ -2,24 +2,30 @@ package bot.union.sw.common.scenariodefine.simplescenario;
 
 import bot.union.sw.common.scenariodefine.Scenario;
 import bot.union.sw.common.scenariodefine.ScenarioStage;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Реализация интерфейса Scenario
- * @param <T> - тип описывающий состояния сценария
+ * @param <T> - тип используемый для идентификации состояний сценария
  * @param <P> - тип описывающий параметры этапов сценария
  */
+@Getter
+@Setter
 public abstract class SimpleScenario<T, P> implements Scenario<T, P> {
 
     String scenarioId;
 
-    List<ScenarioStage<T, P>> stageChain;
-    ScenarioStage<T, P> currentStage;
-    boolean done;
-    boolean started;
+    private List<ScenarioStage<T, P>> stageChain;
+    private ScenarioStage<T, P> currentStage;
+    private boolean done;
+    private boolean started;
 
     public SimpleScenario() {
         this.stageChain = new ArrayList<>();
@@ -98,7 +104,7 @@ public abstract class SimpleScenario<T, P> implements Scenario<T, P> {
 
     @Override
     public List<ScenarioStage<T, P>> getStages() {
-        return null;
+        return Collections.unmodifiableList(stageChain);
     }
 
     @Override
@@ -123,12 +129,12 @@ public abstract class SimpleScenario<T, P> implements Scenario<T, P> {
     }
 
     @Override
-    public void save(String userId) {
-
+    public long save() {
+        return 0;
     }
 
     @Override
-    public void load(String userId) {
+    public void load(long id) {
 
     }
 
@@ -141,4 +147,5 @@ public abstract class SimpleScenario<T, P> implements Scenario<T, P> {
             this.done = true;
         }
     }
+
 }

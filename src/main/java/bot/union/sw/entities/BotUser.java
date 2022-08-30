@@ -1,4 +1,4 @@
-package bot.union.sw.entyties;
+package bot.union.sw.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +18,11 @@ import java.time.LocalDateTime;
 public class BotUser {
 
     @Column(name="chat_id")
-    Long chatId;
-    @Column(name="email")
-    String email;
-    @Column(name="login")
-    String login;
+    private Long chatId;
+    private String email;
+    private String login;
     @Column(name="domain_name")
-    String domainName;
+    private String domainName;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

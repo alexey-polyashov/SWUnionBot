@@ -12,6 +12,9 @@ public class SWUnionBotApp {
 
     public static void main(String[] args) {
         SpringApplication.run(SWUnionBotApp.class);
+
+
+
     }
 
 }

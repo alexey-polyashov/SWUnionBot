@@ -34,6 +34,8 @@ public class BotConfig implements TelegramBotGlobalPropertiesConfiguration {
                 })
                 ;
 
+
+
     }
 
     public String getToken() {

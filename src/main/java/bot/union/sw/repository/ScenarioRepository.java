@@ -1,14 +1,15 @@
 package bot.union.sw.repository;
 
-import bot.union.sw.entyties.BotUser;
-import bot.union.sw.entyties.Scenarios;
-import org.springframework.data.domain.Sort;
+import bot.union.sw.botScenarios.StageParams;
+import bot.union.sw.entities.ScenarioModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ScenarioRepository extends JpaRepository<Scenarios, Long> {
+public interface ScenarioRepository extends JpaRepository<ScenarioModel, Long> {
 
-    List<Scenarios> findByBotUserOrderByOrder(BotUser botUser, Sort sort);
+    Optional<ScenarioModel> findByChatIdAndIdentifier(Long chatId, String identifier);
+    List<ScenarioModel> findByChatId(Long chatId);
 
 }

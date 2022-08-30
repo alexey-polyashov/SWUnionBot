@@ -1,26 +1,23 @@
 package bot.union.sw.botScenarios;
 
-import bot.union.sw.common.scenariodefine.simplescenario.SimpleScenario;
 import bot.union.sw.common.scenariodefine.simplescenario.SimpleScenarioStage;
-import bot.union.sw.entyties.BotUser;
+import bot.union.sw.exceptions.SWUException;
 import bot.union.sw.services.BotService;
 import bot.union.sw.services.ScenarioService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class NewUserConnectedScenario extends SimpleScenario<String, StageParams> {
+public class NewUserConnectedScenario extends CommonScenario<String, StageParams> {
 
     private ScenarioService scenarioService;
     private BotService botService;
-
-    public NewUserConnectedScenario(ScenarioService scenarioService) {
-        super();
-        this.scenarioService = scenarioService;
-    }
 
     public NewUserConnectedScenario() {
         super();
@@ -29,6 +26,7 @@ public class NewUserConnectedScenario extends SimpleScenario<String, StageParams
     public void setScenarioService(ScenarioService scenarioService){
         this.scenarioService = scenarioService;
     }
+
     public void setBotService(BotService botService){
         this.botService = botService;
     }
@@ -76,13 +74,37 @@ public class NewUserConnectedScenario extends SimpleScenario<String, StageParams
     }
 
     @Override
-    public void save(String userId) {
-
+    public String toString() {
+        return "{" +
+                "\"currentStage\":\"" + getCurrentStage().getIdentifier() + "\"," +
+                "\"started\":\"" + isStarted() + "\"," +
+                "\"done\":\"" + isDone() + "\"," +
+                "}";
     }
 
     @Override
-    public void load(String userId) {
+    public long save() {
+        String jsonData = toString();
+        return scenarioService.saveScenario(botService.getCurrentChat().id(),this,  jsonData);
+    }
 
+    @Override
+    public void load(long id) {
+        String jsonData = "";
+        Map<String, String> mapped = new HashMap<>();
+        jsonData = scenarioService.restoreScenario(botService.getCurrentChat().id(), this);
+        if(!jsonData.isEmpty()){
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                mapped = objectMapper.readValue(jsonData, Map.class);
+            } catch (JsonProcessingException e) {
+                throw new SWUException("Ошибка инициализации сценария" + getId());
+            }
+            String stageKey = mapped.get("currentStage");
+            setCurrentStage(getStage(stageKey).orElseThrow(()->new SWUException("Не определен этап сценария " + stageKey)));
+            setDone(Boolean.valueOf(mapped.get("done")));
+            setStarted(Boolean.valueOf(mapped.get("started")));
+        }
     }
 
 }

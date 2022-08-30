@@ -3,7 +3,6 @@ package bot.union.sw.common.scenariodefine.simplescenario;
 import bot.union.sw.common.scenariodefine.ScManager;
 import bot.union.sw.common.scenariodefine.Scenario;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.Optional;
 
 
 @Slf4j
-@Component
 public class SimpleScManager<T, P> implements ScManager<T, P> {
 
     Map<String, Class> scMap = new HashMap<>();

@@ -1,6 +1,6 @@
 package bot.union.sw.services;
 
-import bot.union.sw.entyties.BotUser;
+import bot.union.sw.entities.BotUser;
 import bot.union.sw.repository.BotUserRepository;
 import com.pengrad.telegrambot.model.Chat;
 import lombok.RequiredArgsConstructor;
