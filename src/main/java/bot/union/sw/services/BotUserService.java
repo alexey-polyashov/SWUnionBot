@@ -26,4 +26,13 @@ public class BotUserService {
         return botUser;
     }
 
+    public Optional<BotUser> getUserByChat(Chat chat){
+        log.info("chat:{}, getUserByChat", chat.id());
+        Optional<BotUser> botUser = botUserRepository.findByChatId(chat.id());
+        if(botUser.isEmpty()){
+            log.info("chat:{}, getUserByChat, don't find", chat.id());
+        }
+        return botUser;
+    }
+
 }

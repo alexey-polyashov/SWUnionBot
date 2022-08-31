@@ -1,18 +1,19 @@
 package bot.union.sw.botScenarios;
 
+import com.github.kshashov.telegram.api.TelegramRequest;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.pengrad.telegrambot.model.Message;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StageParams {
     TelegramBot bot;
     Chat chat;
-    String message;
+    Message message;
+    TelegramRequest request;
 }

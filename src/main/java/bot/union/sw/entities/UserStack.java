@@ -1,5 +1,6 @@
 package bot.union.sw.entities;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,12 +12,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 public class UserStack {
 
     @Id
     private Long chatId;
     @Id
-    private Integer order;
+    private Integer number;
     private String scenarioId;
 
 }

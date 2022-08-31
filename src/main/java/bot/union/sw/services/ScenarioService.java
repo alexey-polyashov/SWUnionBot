@@ -1,5 +1,6 @@
 package bot.union.sw.services;
 
+import bot.union.sw.botScenarios.StageParams;
 import bot.union.sw.common.scenariodefine.Scenario;
 import bot.union.sw.entities.ScenarioModel;
 import bot.union.sw.repository.ScenarioRepository;
@@ -15,7 +16,7 @@ public class ScenarioService {
 
     private final ScenarioRepository scenarioRepository;
 
-    public String restoreScenario(Long UserId, Scenario scenario){
+    public String restoreScenario(Long UserId, Scenario<String, StageParams> scenario){
         Optional<ScenarioModel> sc = scenarioRepository.findByChatIdAndIdentifier(UserId, scenario.getId());
         if(sc.isPresent()){
             return sc.get().getData();
@@ -24,10 +25,10 @@ public class ScenarioService {
         }
     }
 
-    public Long saveScenario(Long UserId, Scenario scenario, String data){
+    public Long saveScenario(Long UserId, Scenario<String, StageParams> scenario, String data){
         Optional<ScenarioModel> sc = scenarioRepository.findByChatIdAndIdentifier(UserId, scenario.getId());
         ScenarioModel newScenario = new ScenarioModel();
-        if(!sc.isPresent()){
+        if(sc.isEmpty()){
             newScenario.setChatId(UserId);
             newScenario.setIdentifier(scenario.getId());
         }else{
@@ -38,4 +39,7 @@ public class ScenarioService {
         return UserId;
     }
 
+    public void deleteByChatId(Long id) {
+        scenarioRepository.deleteByChatId(id);
+    }
 }

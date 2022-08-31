@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UserStackRepository extends JpaRepository<UserStack, Long> {
 
-    List<ScenarioModel> findByChatIdOrderByOrder(Long chatId);
+    List<UserStack> findByChatIdOrderByNumber(Long chatId);
+    long deleteByChatId(Long chatId);
 
 }

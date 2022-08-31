@@ -12,4 +12,5 @@ public interface ScenarioRepository extends JpaRepository<ScenarioModel, Long> {
     Optional<ScenarioModel> findByChatIdAndIdentifier(Long chatId, String identifier);
     List<ScenarioModel> findByChatId(Long chatId);
 
+    long deleteByChatId(Long id);
 }

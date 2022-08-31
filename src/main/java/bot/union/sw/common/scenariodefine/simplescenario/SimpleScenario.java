@@ -36,6 +36,10 @@ public abstract class SimpleScenario<T, P> implements Scenario<T, P> {
      * Инициализация сценария. Возможно определение этапов сценария
      */
     public abstract void init();
+    /**
+     * Завершение сценария. Возможно выполнение действий по результатам работы сценария
+     */
+    public abstract void finish();
 
     @Override
     public void goToEnd() {

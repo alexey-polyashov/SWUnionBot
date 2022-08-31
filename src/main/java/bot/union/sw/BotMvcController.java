@@ -28,14 +28,14 @@ public class BotMvcController  implements TelegramMvcController {
     }
 
     @BotRequest(type = {MessageType.ANY})
-    public void optionMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request){
+    public void optionMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request) throws Throwable {
 
         botService.setCurrentChat(chat);
-        botService.load();
+        botService.loadChat();
 
         botService.doWork(mes, bot, chat, fullMes, request);
 
-        botService.save();
+        botService.saveChat();
 
    }
 

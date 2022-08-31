@@ -56,7 +56,7 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
             bot.execute(new SendMessage(chat.id(), "Выполняю поиск ..."));
             //поиск пользователя
             if(botService
-                    .getUser(p.getMessage(), p.getChat())
+                    .getUser(p.getMessage().text(), p.getChat())
                     .isEmpty()) {
                 bot.execute(new SendMessage(chat.id(), "Указанные вами идентификационные данные не соответствуют ни одному из пользователей. Повторите попытку."));
                 return "2";
@@ -71,6 +71,11 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
         addStage(st2);
         addStage(st3);
 
+    }
+
+    @Override
+    public void finish() {
+        botService.endCurrentScenario();
     }
 
     @Override

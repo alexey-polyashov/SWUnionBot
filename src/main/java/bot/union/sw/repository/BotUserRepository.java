@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BotUserRepository extends JpaRepository<BotUser, Long> {
 
     Optional<BotUser> findByEmail(String identifier);
-
     Optional<BotUser> findByDomainName(String identifier);
+    Optional<BotUser> findByChatId(Long chatId);
 
 }
