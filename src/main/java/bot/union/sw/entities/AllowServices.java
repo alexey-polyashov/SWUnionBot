@@ -12,24 +12,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "bot_users")
+@Table(name = "user_services")
 @Getter
 @Setter
 @NoArgsConstructor
-public class BotUser {
+public class AllowServices {
 
-    @Column(name="chat_id")
-    private Long chatId;
-    private String email;
-    private String login;
-    @Column(name="domain_name")
-    private String domainName;
+    @Column
+    String name;
+    String description;
 
     @ManyToMany
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "services_roles",
+            joinColumns = @JoinColumn(name = "service_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    List<Roles> roles;
+    List<Roles> requiredRoles;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
