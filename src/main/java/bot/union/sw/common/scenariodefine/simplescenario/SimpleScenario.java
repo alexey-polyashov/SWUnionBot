@@ -115,7 +115,7 @@ public abstract class SimpleScenario<T, P> implements Scenario<T, P> {
     public Optional<ScenarioStage<T, P>> getStage(T stageId) {
         Optional<ScenarioStage<T, P>> result = Optional.empty();
         for (ScenarioStage<T, P> stage: stageChain) {
-            if(stage.getIdentifier()==stageId){
+            if(stage.getIdentifier().equals(stageId)){
                 result  = Optional.of(stage);
             }
         }

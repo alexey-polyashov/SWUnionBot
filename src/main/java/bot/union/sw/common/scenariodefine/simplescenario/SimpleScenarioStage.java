@@ -15,6 +15,7 @@ public class SimpleScenarioStage<T, P> implements ScenarioStage<T, P> {
     T identifier;
 
     public SimpleScenarioStage(T id, Function<P, T> worker){
+        this.identifier = id;
         this.worker = worker;
     }
 

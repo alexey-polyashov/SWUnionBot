@@ -3,7 +3,10 @@ package bot.union.sw;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @SpringBootApplication
 @EnableAutoConfiguration

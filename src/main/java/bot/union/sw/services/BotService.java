@@ -14,20 +14,18 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@RequestScope
+@Scope("prototype")
 public class BotService {
 
     private final SimpleScManagerConfig simpleScManager;
@@ -70,8 +68,11 @@ public class BotService {
             UserStack el = it.next();
             Scenario<String, StageParams> newScen = simpleScManager.getScenarioById(el.getScenarioId())
                     .orElseThrow(()->new SWUException("Ошибка восстановления сеанса, сценарий '" + el.getScenarioId() + "' не найден"));
-            newScen.load(currentChat.id());
-            scenarioStack.push(newScen);
+            CommonScenario<String, StageParams> comScen  = (CommonScenario)newScen;
+            comScen.setScenarioService(scenarioService);
+            comScen.setBotService(this);
+            comScen.load(currentChat.id());
+            scenarioStack.push(comScen);
         }
     }
 

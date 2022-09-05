@@ -21,6 +21,7 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
 
     public NewUserConnectedScenario() {
         super();
+        setScenarioId("NewUserConnectedScenario");
     }
 
     public void setScenarioService(ScenarioService scenarioService){
@@ -83,7 +84,7 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
         return "{" +
                 "\"currentStage\":\"" + getCurrentStage().getIdentifier() + "\"," +
                 "\"started\":\"" + isStarted() + "\"," +
-                "\"done\":\"" + isDone() + "\"," +
+                "\"done\":\"" + isDone() + "\"" +
                 "}";
     }
 
