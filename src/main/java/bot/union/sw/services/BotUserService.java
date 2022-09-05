@@ -35,4 +35,8 @@ public class BotUserService {
         return botUser;
     }
 
+    public Long save(BotUser botUser) {
+        botUserRepository.save(botUser);
+        return botUser.getId();
+    }
 }

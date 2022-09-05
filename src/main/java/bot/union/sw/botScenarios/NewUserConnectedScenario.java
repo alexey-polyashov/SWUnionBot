@@ -1,6 +1,7 @@
 package bot.union.sw.botScenarios;
 
 import bot.union.sw.common.scenariodefine.simplescenario.SimpleScenarioStage;
+import bot.union.sw.entities.BotUser;
 import bot.union.sw.exceptions.SWUException;
 import bot.union.sw.services.BotService;
 import bot.union.sw.services.ScenarioService;
@@ -12,6 +13,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class NewUserConnectedScenario extends CommonScenario<String, StageParams> {
@@ -56,16 +58,22 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
             TelegramBot bot = p.getBot();
             bot.execute(new SendMessage(chat.id(), "Выполняю поиск ..."));
             //поиск пользователя
-            if(botService
-                    .getUser(p.getMessage().text(), p.getChat())
-                    .isEmpty()) {
-                bot.execute(new SendMessage(chat.id(), "Указанные вами идентификационные данные не соответствуют ни одному из пользователей. Повторите попытку."));
-                return "2";
-            }
-            bot.execute(new SendMessage(chat.id(), "Вы зарегистрированы"));
-            bot.execute(new SendMessage(chat.id(), "Используйте команду /myservices для управления сервисами"));
-            bot.execute(new SendMessage(chat.id(), "Используйте команду /help для получения справки"));
-            return null;
+            Optional<BotUser> botUser = botService.getUser(p.getMessage().text(), p.getChat());
+            String[] retVal = {null};
+            botUser.ifPresentOrElse(
+                    (v)->{
+                        v.setChatId(chat.id());
+                        botService.saveBotUser(v);
+                        bot.execute(new SendMessage(chat.id(), "Вы зарегистрированы"));
+                        bot.execute(new SendMessage(chat.id(), "Используйте команду /myservices для управления сервисами"));
+                        bot.execute(new SendMessage(chat.id(), "Используйте команду /help для получения справки"));
+                    },
+                    () -> {
+                        bot.execute(new SendMessage(chat.id(), "Указанные вами идентификационные данные не соответствуют ни одному из пользователей. Повторите попытку."));
+                        retVal[0] = "2";
+                    }
+                    );
+            return retVal[0];
         });
 
         addStage(st1);

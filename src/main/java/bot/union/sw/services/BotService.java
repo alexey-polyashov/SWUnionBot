@@ -68,7 +68,7 @@ public class BotService {
             UserStack el = it.next();
             Scenario<String, StageParams> newScen = simpleScManager.getScenarioById(el.getScenarioId())
                     .orElseThrow(()->new SWUException("Ошибка восстановления сеанса, сценарий '" + el.getScenarioId() + "' не найден"));
-            CommonScenario<String, StageParams> comScen  = (CommonScenario)newScen;
+            CommonScenario<String, StageParams> comScen  = (CommonScenario<String, StageParams> )newScen;
             comScen.setScenarioService(scenarioService);
             comScen.setBotService(this);
             comScen.load(currentChat.id());
@@ -94,6 +94,15 @@ public class BotService {
         }
     }
 
+    private void checkScenStack(){
+        if (!scenarioStack.empty()){
+            Scenario<String, StageParams> sc = scenarioStack.peek();
+            if(sc.getCurrentStage()==null){
+                endCurrentScenario();
+            }
+        }
+    }
+
     public void doWork(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request) throws Throwable {
 
         if(scenarioStack.empty()) {
@@ -102,6 +111,7 @@ public class BotService {
                 Scenario<String, StageParams> sc = startScenario("NewUserConnectedScenario", currentChat);
                 StageParams p = StageParams.builder().bot(bot).chat(chat).message(fullMes).request(request).build();
                 sc.doWork(p);
+                checkScenStack();
                 return;
             }else{
                 bot.execute(new SendMessage(chat.id(), "Здравствуйте!"));
@@ -112,6 +122,7 @@ public class BotService {
             Scenario<String, StageParams> sc = scenarioStack.peek();
             StageParams p = StageParams.builder().bot(bot).chat(chat).message(fullMes).request(request).build();
             sc.doWork(p);
+            checkScenStack();
             return;
         }
 
@@ -121,5 +132,10 @@ public class BotService {
         if (!scenarioStack.empty()){
             scenarioStack.pop();
         }
+    }
+
+    public Long saveBotUser(BotUser botUser) {
+        botUserService.save(botUser);
+        return null;
     }
 }
