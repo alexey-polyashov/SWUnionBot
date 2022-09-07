@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "user_services")
+@Table(name = "allow_services")
 @Getter
 @Setter
 @NoArgsConstructor

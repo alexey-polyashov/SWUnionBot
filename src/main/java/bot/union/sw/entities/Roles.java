@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_services")
+@Table(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
