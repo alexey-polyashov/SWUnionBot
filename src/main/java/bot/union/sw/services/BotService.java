@@ -135,7 +135,7 @@ public class BotService {
     }
 
     public Long saveBotUser(BotUser botUser) {
-        botUserService.save(botUser);
+        botUserService.saveBotUser(botUser);
         return null;
     }
 }

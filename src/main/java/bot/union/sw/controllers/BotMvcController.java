@@ -1,5 +1,6 @@
-package bot.union.sw;
+package bot.union.sw.controllers;
 
+import bot.union.sw.BotConfig;
 import bot.union.sw.services.BotService;
 import com.github.kshashov.telegram.api.MessageType;
 import com.github.kshashov.telegram.api.TelegramMvcController;

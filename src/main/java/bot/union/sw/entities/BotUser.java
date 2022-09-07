@@ -20,16 +20,23 @@ public class BotUser {
 
     @Column(name="chat_id")
     private Long chatId;
+    @Column
     private String email;
+    @Column
     private String login;
     @Column(name="domain_name")
     private String domainName;
+    @Column
+    private String password;
 
     @ManyToMany
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    List<Roles> roles;
+    private List<Roles> roles;
+
+    @Column
+    private Boolean blocked = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

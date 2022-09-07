@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 public class UserServices {
 
     @Column
-    String name;
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "service")
-    AllowServices service;
+    private AllowServices service;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

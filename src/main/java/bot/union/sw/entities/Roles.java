@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 public class Roles {
 
     @Column
-    String name;
+    private String name;
     @Column
-    String description;
+    private String description;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
