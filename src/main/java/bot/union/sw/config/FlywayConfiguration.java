@@ -1,4 +1,4 @@
-package bot.union.sw;
+package bot.union.sw.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,13 +8,12 @@ import bot.union.sw.services.BotUserService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import javax.persistence.Column;
-
 @Mapper(componentModel = "spring", uses={BotUserService.class})
 public interface BotUserMapper {
 
     BotUser toModel(NewBotUserDto dto);
 
+    @Mapping(target = "id", source = "botUserSource.id")
     @Mapping(target = "email", source = "botUserUpdate.email")
     @Mapping(target = "login", source = "botUserUpdate.login")
     @Mapping(target = "domainName", source = "botUserUpdate.domainName")
