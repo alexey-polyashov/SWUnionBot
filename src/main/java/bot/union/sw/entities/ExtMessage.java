@@ -23,20 +23,20 @@ public class ExtMessage {
     private String textMessage;
     @ManyToOne
     @JoinColumn(name = "service")
-    private AllowServices service;
+    private AllowService service;
     @ManyToOne
     @JoinColumn(name = "bot_user")
     private BotUser botUser;
 
     @OneToMany(cascade=ALL, mappedBy="message")
-    List<MessageAttachments> attachments;
+    List<MessageAttachment> attachments;
 
     @Column
     private Boolean passed;
     @Column
     private Integer numsPass;
     @Column
-    private Boolean error;
+    private String error;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

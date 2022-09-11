@@ -21,6 +21,8 @@ public class BotUser {
     @Column(name="chat_id")
     private Long chatId;
     @Column
+    private String name;
+    @Column
     private String email;
     @Column
     private String login;

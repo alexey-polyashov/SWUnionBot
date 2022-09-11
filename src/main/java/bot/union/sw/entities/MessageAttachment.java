@@ -14,16 +14,21 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MessageAttachments {
+public class MessageAttachment {
 
     @ManyToOne
     @JoinColumn(name = "message")
-    private BotUser message;
+    private ExtMessage message;
     @Column
     private String identifier;
+    @Column(name = "content_type")
+    private String contentType;
+    @Column(name = "files_ize")
+    private Long fileSize;
+
     @Lob
     @Column(name = "data", columnDefinition="BLOB")
-    private Byte[] data;
+    private byte[] data;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

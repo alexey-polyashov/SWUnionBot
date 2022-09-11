@@ -19,8 +19,8 @@ public class MessageController {
     @PostMapping
     public void getMessage(@RequestParam String textMessage,
                            @RequestParam String serviceName,
-                           @RequestParam String userName,
-                            @RequestParam("attachments") List<MultipartFile> files
+                           @RequestParam String userName, //логин или email
+                           @RequestParam("attachments") List<MultipartFile> files
                            ){
 
     }

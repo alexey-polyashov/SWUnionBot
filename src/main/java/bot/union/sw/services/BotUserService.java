@@ -30,6 +30,12 @@ public class BotUserService {
     private final BotUserRepository botUserRepository;
 
 
+    public BotUser getUserByString(String identifier){
+        log.info("getUser: user id - {}", identifier);
+        return getUser(identifier, new Chat())
+                .orElseThrow(()->new ResourceNotFound("Пользователь с логином или email '" + identifier + "' не найден в базе"));
+    }
+
     public Optional<BotUser> getUser(String identifier, Chat chat){
         log.info("chat:{}, getUser: user id - {}", chat.id(), identifier);
         Optional<BotUser> botUser = botUserRepository.findByEmail(identifier);
