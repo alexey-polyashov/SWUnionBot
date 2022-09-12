@@ -19,19 +19,17 @@ import java.util.List;
 public class AllowService {
 
     @Column
-    String name;
     String description;
 
     @ManyToMany
     @JoinTable(name = "services_roles",
-            joinColumns = @JoinColumn(name = "service_id"),
+            joinColumns = @JoinColumn(name = "service_name"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     List<Roles> requiredRoles;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private String name;
     @Column(name = "marked")
     @ColumnDefault("false")
     private Boolean marked = false;

@@ -1,5 +1,6 @@
 package bot.union.sw.services;
 
+import bot.union.sw.entities.AllowService;
 import bot.union.sw.entities.BotUser;
 import bot.union.sw.entities.Roles;
 import bot.union.sw.entities.dto.BotUserDto;
@@ -119,6 +120,10 @@ public class BotUserService {
 
     public void deleteBotUser(Long userId){
         botUserRepository.deleteById(userId);
+    }
+
+    public List<BotUser> findByService(AllowService service){
+        return botUserRepository.findByUserServices(service);
     }
 
 }

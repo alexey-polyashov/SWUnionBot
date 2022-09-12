@@ -32,6 +32,8 @@ public class ExtMessage {
     List<MessageAttachment> attachments;
 
     @Column
+    private Boolean ready;
+    @Column
     private Boolean passed;
     @Column
     private Integer numsPass;

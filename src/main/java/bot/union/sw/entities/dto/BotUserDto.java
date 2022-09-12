@@ -20,5 +20,6 @@ public class BotUserDto {
     private Boolean blocked;
 
     List<RoleDto> roles;
+    List<AllowServiceSimpleDto> userServices;
 
 }

@@ -37,6 +37,12 @@ public class BotUser {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Roles> roles;
 
+    @ManyToMany
+    @JoinTable(name = "user_services",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_name"))
+    private List<AllowService> userServices;
+
     @Column
     private Boolean blocked = false;
 

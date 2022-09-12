@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserServices {
 
-    @Column
-    private String name;
+    @Column(name = "bot_user")
+
+    private BotUser botUser;
 
     @ManyToOne
     @JoinColumn(name = "service")

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AllowServicesRepository extends JpaRepository<AllowService, Long> {
-    public Optional<AllowService> findByName(String name);
+public interface AllowServicesRepository extends JpaRepository<AllowService, String> {
+    Optional<AllowService> findByName(String name);
 }
