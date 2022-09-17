@@ -28,7 +28,7 @@ public class AllowService {
     List<Roles> requiredRoles;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "name")
     private String name;
     @Column(name = "marked")
     @ColumnDefault("false")

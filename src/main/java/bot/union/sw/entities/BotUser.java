@@ -19,7 +19,8 @@ import java.util.List;
 public class BotUser {
 
     @Column(name="chat_id")
-    private Long chatId;
+    @ColumnDefault("0")
+    private Long chatId = 0L;
     @Column
     private String name;
     @Column
@@ -44,6 +45,7 @@ public class BotUser {
     private List<AllowService> userServices;
 
     @Column
+    @ColumnDefault("false")
     private Boolean blocked = false;
 
     @Id

@@ -3,6 +3,7 @@ package bot.union.sw.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ import static javax.persistence.CascadeType.ALL;
 public class ExtMessage {
 
     @Column
-    private String textMessage;
+    private String textMessage = "";
     @ManyToOne
     @JoinColumn(name = "service")
     private AllowService service;
@@ -32,16 +33,16 @@ public class ExtMessage {
     List<MessageAttachment> attachments;
 
     @Column
-    private Boolean ready;
+    private Boolean ready = false;
     @Column
-    private Boolean passed;
+    private Boolean passed = false;
+    @Column(name = "num_pass")
+    private Integer numsPass = 0;
     @Column
-    private Integer numsPass;
-    @Column
-    private String error;
+    private String error = "";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id")
     private UUID id;
     @CreationTimestamp

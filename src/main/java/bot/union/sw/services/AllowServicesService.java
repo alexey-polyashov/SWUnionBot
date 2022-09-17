@@ -12,9 +12,9 @@ public class AllowServicesService {
 
     private final AllowServicesRepository servicesRepository;
 
-    public AllowService findByName(String serviceName){
-        return servicesRepository.findByName(serviceName).orElseThrow(
-                ()->new ResourceNotFound("Сервис '" + serviceName+ "' не найден"));
+    public AllowService findByName(String service){
+        return servicesRepository.findByName(service).orElseThrow(
+                ()->new ResourceNotFound("Сервис '" + service+ "' не найден"));
     }
 
 }

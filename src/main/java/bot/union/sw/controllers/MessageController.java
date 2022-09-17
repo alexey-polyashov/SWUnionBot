@@ -29,28 +29,30 @@ public class MessageController {
     private final BotService botService;
 
     @PostMapping
-    public ExtMessageDto sendMessage(@RequestParam String textMessage,
-                           @RequestParam String serviceName,
-                           @RequestParam String userName, //логин или email
-                           @RequestParam("attachments") List<MultipartFile> files
+    public ExtMessageDto sendMessage(@RequestParam(name = "text_message") String textMessage,
+                           @RequestParam(name = "service_name") String serviceName,
+                           @RequestParam(required = false, name = "user_name") String userName, //логин или email
+                           @RequestParam(required = false, name="attachments") List<MultipartFile> files
                            ){
 
         ExtMessageDto messageDto = messageService.addMessage(
                 NewExtMessageDto.builder()
                         .textMessage(textMessage)
-                        .serviceName(serviceName)
+                        .service(serviceName)
                         .userIdentifier(userName)
                         .build());
         UUID uuid = messageDto.getId();
-        files.stream().forEach(
-                (f) -> {
-                    try {
-                        messageService.addAttachment(uuid, f);
-                    } catch (IOException e) {
-                        log.error("sendMessage: add attachment, message id - {}, error - {}", uuid, e.getMessage());
+        if(files!=null) {
+            files.stream().forEach(
+                    (f) -> {
+                        try {
+                            messageService.addAttachment(uuid, f);
+                        } catch (IOException e) {
+                            log.error("sendMessage: add attachment, message id - {}, error - {}", uuid, e.getMessage());
+                        }
                     }
-                }
-        );
+            );
+        }
         messageService.setReady(uuid);
         messageDto = messageService.findMessage(messageDto.getId());
         return messageDto;

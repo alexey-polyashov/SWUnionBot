@@ -21,20 +21,25 @@ VALUES (1, 1),(1, 2),(1,3),(1,4),
 
 
 --ALLOW_SERVICES
-INSERT INTO allow_services (id, name, description, marked, created_at, updated_at )
-VALUES (1, 'errors_trade', 'Оповещение об ошибках в торговой базе', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
-        (2, 'errors_wms', 'Оповещение об ошибках в системе WMS', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
-        (3, 'errors_accounting', 'Оповещение об ошибках в бухгалтерской базе', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
-        (4, 'errors_exchange', 'Оповещение об ошибках в системе обмена', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
-        (5, 'alerts_system', 'Важные системные оповещения', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
-        (6, 'alerts_common', 'Общие оповещения', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00');
+INSERT INTO allow_services (name, description, marked, created_at, updated_at )
+VALUES ('errors_trade', 'Оповещение об ошибках в торговой базе', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
+        ('errors_wms', 'Оповещение об ошибках в системе WMS', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
+        ('errors_accounting', 'Оповещение об ошибках в бухгалтерской базе', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
+        ('errors_exchange', 'Оповещение об ошибках в системе обмена', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
+        ('alerts_system', 'Важные системные оповещения', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00'),
+        ('alerts_common', 'Общие оповещения', false, '2022-01-01 08:30:00', '2022-01-01 08:30:00');
 
 --SERVICES_ROLES
-INSERT INTO services_roles (service_id, role_id)
-VALUES (1, 1),(1, 2),
-        (2, 1),(2, 2),
-        (3, 1),(3, 2);
+INSERT INTO services_roles (service_name, role_id)
+VALUES ('errors_trade', 1),('errors_trade', 2),
+        ('errors_wms', 1),('errors_wms', 2),
+        ('errors_accounting', 1),('errors_accounting', 2);
 
+
+--USER_SERVICES
+INSERT INTO user_services (user_id, service_name )
+VALUES (1, 'errors_trade'),
+        (1, 'alerts_system');
 
 
 

@@ -16,15 +16,15 @@ public interface ExtMessageRepository extends JpaRepository<ExtMessage, UUID> {
     @Query("Select count(*) From ExtMessage m Where m.ready=true AND m.passed=false AND m.numsPass<4")
     Integer getQueueSize();
 
-    @Query("Select m From ExtMessage m Where m.ready=true AND m.passed=false AND m.numsPass<4 Order m.createTime desc  Limit :limit")
-    List<ExtMessage> getQueue(@Param("limit") int limit);
+    @Query(value ="Select * From external_messages AS m Where m.ready=true AND m.passed=false AND m.num_pass<4 Order By m.created_at desc Limit :limit", nativeQuery = true)
+    List<ExtMessage> getQueue(@Param("limit") Long limit);
 
     @Modifying
-    @Query("Update ExtMessage m Set m.ready=true Where m.uuid=:uuid")
+    @Query("Update ExtMessage m Set m.ready=true Where m.id=:uuid")
     void setReady(@Param("uuid") UUID uuid);
 
     @Modifying
-    @Query("Update ExtMessage m Set m.passed=true Where m.uuid=:uuid")
+    @Query("Update ExtMessage m Set m.passed=true Where m.id=:uuid")
     void setPassed(@Param("uuid") UUID uuid);
 
 }

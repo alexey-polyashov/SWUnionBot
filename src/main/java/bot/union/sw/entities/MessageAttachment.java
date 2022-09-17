@@ -27,11 +27,11 @@ public class MessageAttachment {
     private Long fileSize;
 
     @Lob
-    @Column(name = "data", columnDefinition="BLOB")
+    @Column(name = "data")
     private byte[] data;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id")
     private UUID id;
     @CreationTimestamp

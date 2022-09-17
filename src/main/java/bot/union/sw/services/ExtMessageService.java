@@ -8,6 +8,7 @@ import bot.union.sw.entities.dto.ExtMessageDto;
 import bot.union.sw.entities.dto.NewExtMessageDto;
 import bot.union.sw.entities.mappers.ExtMessageMapper;
 import bot.union.sw.exceptions.ResourceNotFound;
+import bot.union.sw.exceptions.SWUException;
 import bot.union.sw.repository.ExtMessageRepository;
 import bot.union.sw.repository.MessageAttachmentRepository;
 import com.pengrad.telegrambot.TelegramBot;
@@ -38,7 +39,7 @@ public class ExtMessageService {
     private final BotConfig botConfig;
 
     private static final String CRON = "*/10 * * * * *";
-    private static final int scheduleLimit = 50;
+    private static final Long scheduleLimit = 50L;
 
     @Transactional
     public ExtMessageDto addMessage(NewExtMessageDto newMessage){
@@ -71,13 +72,13 @@ public class ExtMessageService {
         return null;
     }
 
-    public List<ExtMessageDto> getMessagesQueueDto(int limit){
+    public List<ExtMessageDto> getMessagesQueueDto(Long limit){
         return getMessagesQueue(limit).stream()
                 .map(messageMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<ExtMessage> getMessagesQueue(int limit){
+    public List<ExtMessage> getMessagesQueue(Long limit){
         return messageRepository.getQueue(limit);
     }
 
@@ -85,10 +86,12 @@ public class ExtMessageService {
         return messageRepository.getQueueSize();
     }
 
+    @Transactional
     public void setReady(UUID uuid) {
         messageRepository.setReady(uuid);
     }
 
+    @Transactional
     public void setPassed(UUID uuid) {
         messageRepository.setPassed(uuid);
     }
@@ -105,6 +108,9 @@ public class ExtMessageService {
             recipients.add(message.getBotUser());
         }else{
             recipients = botUserService.findByService(message.getService());
+        }
+        if(recipients.size()==0){
+            throw new SWUException("No recipient for message: service '" + message.getService() + "'");
         }
         for (BotUser botUser : recipients) {
             Long chatId = botUser.getChatId();
