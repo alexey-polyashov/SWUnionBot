@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class MessageAttachment {
 
     @Lob
     @Column(name = "data")
-    private byte[] data;
+    private Blob data;
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -37,4 +38,5 @@ public class MessageAttachment {
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createTime;
+
 }

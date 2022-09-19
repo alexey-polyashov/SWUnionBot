@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class ExtMessageService {
         return messageMapper.toDto(message);
     }
 
-    public String addAttachment(UUID messageId, MultipartFile mpf) throws IOException {
+    public String addAttachment(UUID messageId, MultipartFile mpf) throws IOException, SQLException {
         ExtMessage extMessage = messageRepository.findById(messageId)
                 .orElseThrow(()->new ResourceNotFound("Сообщение с идентификатором '" + messageId + "' не найдено"));
         MessageAttachment attachment = new MessageAttachment();
@@ -56,7 +57,7 @@ public class ExtMessageService {
         attachment.setIdentifier(String.valueOf(extMessage.getAttachments().size()));
         attachment.setFileSize(mpf.getSize());
         attachment.setContentType(mpf.getContentType());
-        attachment.setData(mpf.getBytes());
+        attachment.getData().setBytes(0, mpf.getBytes());
         attachmentRepository.save(attachment);
         return attachment.getIdentifier();
     }

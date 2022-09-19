@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +48,7 @@ public class MessageController {
                     (f) -> {
                         try {
                             messageService.addAttachment(uuid, f);
-                        } catch (IOException e) {
+                        } catch (IOException | SQLException e) {
                             log.error("sendMessage: add attachment, message id - {}, error - {}", uuid, e.getMessage());
                         }
                     }
