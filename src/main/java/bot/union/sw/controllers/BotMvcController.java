@@ -32,7 +32,7 @@ public class BotMvcController  implements TelegramMvcController {
     @BotRequest(type = {MessageType.ANY})
     public void optionMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request) throws Throwable {
 
-        baseMethod(mes, bot, chat, fullMes, request);
+        baseMethod(mes, bot, chat, fullMes, request, "text");
 
     }
 
@@ -40,15 +40,15 @@ public class BotMvcController  implements TelegramMvcController {
     @MessageRequest("/*")
     public void commandRequest(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request) throws Throwable {
 
-        baseMethod(mes, bot, chat, fullMes, request);
+        baseMethod(mes, bot, chat, fullMes, request, "cmd");
 
     }
 
-    private void baseMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request) throws Throwable {
+    private void baseMethod(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request, String opt) throws Throwable {
 
         botService.setCurrentChat(chat);
         botService.loadChat();
-        botService.doWork(mes, bot, chat, fullMes, request);
+        botService.doWork(mes, bot, chat, fullMes, request, opt);
         botService.saveChat();
 
     }

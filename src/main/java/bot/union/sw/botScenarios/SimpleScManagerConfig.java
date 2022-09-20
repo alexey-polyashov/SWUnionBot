@@ -11,6 +11,7 @@ public class SimpleScManagerConfig extends SimpleScManager<String, StageParams> 
     @PostConstruct
     private void init(){
         this.attach(NewUserConnectedScenario.class, "NewUserConnectedScenario");
+        this.attach(ServiceSelectScenario.class, "ServiceSelectScenario");
     }
 
 }

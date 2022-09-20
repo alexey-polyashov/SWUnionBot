@@ -4,6 +4,7 @@ import bot.union.sw.botScenarios.CommonScenario;
 import bot.union.sw.botScenarios.SimpleScManagerConfig;
 import bot.union.sw.botScenarios.StageParams;
 import bot.union.sw.common.scenariodefine.Scenario;
+import bot.union.sw.entities.AllowService;
 import bot.union.sw.entities.BotUser;
 import bot.union.sw.entities.UserStack;
 import bot.union.sw.exceptions.SWUException;
@@ -17,10 +18,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.*;
 
@@ -34,6 +33,7 @@ public class BotService {
     private final BotUserService botUserService;
     private final ScenarioService scenarioService;
     private final UserStackRepository userStackRepository;
+    private final AllowServicesService allowServicesService;
 
     private Chat currentChat;
 
@@ -105,7 +105,7 @@ public class BotService {
         }
     }
 
-    public void doWork(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request) throws Throwable {
+    public void doWork(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request, String opt) throws Throwable {
 
         if(scenarioStack.empty()) {
             Optional<BotUser> botUser = botUserService.getUserByChat(chat);
@@ -115,7 +115,16 @@ public class BotService {
                 sc.doWork(p);
                 checkScenStack();
                 return;
-            }else{
+            }else if(opt.equals("cmd")){
+                if(fullMes.text().equals("/myservices")){
+                    Scenario<String, StageParams> sc = startScenario("ServiceSelectScenario", currentChat);
+                    StageParams p = StageParams.builder().bot(bot).chat(chat).message(fullMes).request(request).build();
+                    sc.doWork(p);
+                    checkScenStack();
+                    return;
+                }
+            }
+            else{
                 bot.execute(new SendMessage(chat.id(), "Здравствуйте!"));
                 bot.execute(new SendMessage(chat.id(), "Я бот компании Спецобъединение \"Северо-Запад\""));
                 bot.execute(new SendMessage(chat.id(), "Я пока ничего не умею, но скоро меня научат"));
@@ -139,5 +148,27 @@ public class BotService {
     public Long saveBotUser(BotUser botUser) {
         botUserService.saveBotUser(botUser);
         return null;
+    }
+
+    public List<AllowService> findAllServices(){
+        return allowServicesService.findAll();
+    }
+
+    @Transactional
+    public List<AllowService> findAllUserServices(Chat chat){
+        return botUserService.getUserServices(chat);
+    }
+
+
+    public void deleteUserService(Chat chat, String servName) {
+        botUserService.deleteUserService(chat, servName);
+    }
+
+    public void addUserService(Chat chat, String servName) {
+        botUserService.addUserService(chat, servName);
+    }
+
+    public List<AllowService> findAllowServices(Chat chat) {
+        return allowServicesService.findAlowServicesForUser(chat);
     }
 }

@@ -16,7 +16,9 @@ import com.pengrad.telegrambot.model.Chat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ public class BotUserService {
     private final BotUserMapper botUserMapper;
     private final RoleRepository roleRepository;
     private final BotUserRepository botUserRepository;
+    private final AllowServicesService allowServicesService;
 
 
     public BotUser getUserByString(String identifier){
@@ -126,4 +129,34 @@ public class BotUserService {
         return botUserRepository.findByUserServices(service);
     }
 
+    @Transactional
+    public List<AllowService> getUserServices(Chat chat) {
+        return botUserRepository.getUserServicesByChatID(chat.id());
+    }
+
+    @Transactional
+    public boolean deleteUserService(Chat chat, String servName) {
+        boolean res = false;
+        BotUser bUser = botUserRepository.findByChatId(chat.id()).orElseThrow(()-> new ResourceNotFound("Пользователь с идентификатором чата '" + chat.id() + "' не найден"));
+        AllowService aServ = allowServicesService.findByName(servName);
+        if(aServ!=null){
+            bUser.getUserServices().remove(aServ);
+            res = true;
+        }
+        botUserRepository.save(bUser);
+        return res;
+    }
+
+    @Transactional
+    public boolean addUserService(Chat chat, String servName) {
+        boolean res = false;
+        BotUser bUser = botUserRepository.findByChatId(chat.id()).orElseThrow(()-> new ResourceNotFound("Пользователь с идентификатором чата '" + chat.id() + "' не найден"));
+        AllowService aServ = allowServicesService.findByName(servName);
+        if(aServ!=null){
+            bUser.getUserServices().add(aServ);
+            res = true;
+        }
+        botUserRepository.save(bUser);
+        return res;
+    }
 }
