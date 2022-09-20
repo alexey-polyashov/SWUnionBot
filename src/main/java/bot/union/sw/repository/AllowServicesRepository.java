@@ -15,10 +15,10 @@ public interface AllowServicesRepository extends JpaRepository<AllowService, Str
     List<AllowService> findByMarked(boolean b);
 
     @Query(value="Select aServ.* " +
-            "From bot_users" +
-            " Inner Join user_roles On user_roles.user_id = bot_users.id" +
-            " Inner join services_roles On services_roles.role_id = user_roles.role.id" +
-            " Inner Join allow_services AS aServ On services_roles.service_name = aServ.service_name" +
-            "Where bot_users.chant_id = :chatId", nativeQuery = true)
+            " From bot_users As bu" +
+            "   Inner Join user_roles As ur On ur.user_id = bu.id " +
+            "   Inner join services_roles As sr On sr.role_id = ur.role_id " +
+            "   Inner Join allow_services AS aServ On sr.service_name = aServ.name " +
+            " Where bu.chat_id=:chatId", nativeQuery = true)
     List<AllowService> findAllowServicesForUser(@Param("chatId") Long chatId);
 }

@@ -42,7 +42,7 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
         SimpleScenarioStage<String, StageParams> st1 = new SimpleScenarioStage<>("1", (p) -> {
             Chat chat = p.getChat();
             TelegramBot bot = p.getBot();
-            bot.execute(new SendMessage(chat.id(), "<b><---</b>").parseMode(ParseMode.HTML));
+            bot.execute(new SendMessage(chat.id(), "<---"));
             bot.execute(new SendMessage(chat.id(), "*Список подключенных у вас сервисов*").parseMode(ParseMode.MarkdownV2));
             List<AllowService> servicesList = botService.findAllUserServices(chat);
             InlineKeyboardButton kbAddServ = new  InlineKeyboardButton("+ Добавить сервис из списка доступных").callbackData("add#");
@@ -56,7 +56,7 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
                             .replyMarkup(new InlineKeyboardMarkup(kbDelServ)));
                 }
             }
-            bot.execute(new SendMessage(chat.id(), "<b>---></b>").parseMode(ParseMode.HTML)
+            bot.execute(new SendMessage(chat.id(), "--->")
                     .replyMarkup(new InlineKeyboardMarkup(kbAddServ,kbReturn)));
             return "2";
         });
@@ -70,9 +70,11 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
                 case "del":
                     botService.deleteUserService(chat, mesParts[1]);
                     bot.execute(new SendMessage(chat.id(), "Сервис '" + mesParts[1] + "' отключен"));
-                    return "1";
+                    goToStage("1");
+                    doWork(p);
+                    return "2";
                 case "add":
-                    bot.execute(new SendMessage(chat.id(), "<b><---</b>").parseMode(ParseMode.HTML));
+                    bot.execute(new SendMessage(chat.id(), "<---"));
                     bot.execute(new SendMessage(chat.id(), "*Список доступных для подключения сервисов*").parseMode(ParseMode.MarkdownV2));
                     List<AllowService> servicesList = botService.findAllowServices(chat);
                     InlineKeyboardButton kbReturn = new InlineKeyboardButton("< Назад").callbackData("ret#");
@@ -85,7 +87,7 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
                                     .replyMarkup(new InlineKeyboardMarkup(kbAddServ)));
                         }
                     }
-                    bot.execute(new SendMessage(chat.id(), "<b>---></b>").parseMode(ParseMode.HTML)
+                    bot.execute(new SendMessage(chat.id(), "--->")
                             .replyMarkup(new InlineKeyboardMarkup(kbReturn)));
                     return "3";
                 case "ret":
@@ -103,17 +105,22 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
             TelegramBot bot = p.getBot();
             String message = p.getRequest().getText();
             String[] mesParts = message.split("#");
-            if(mesParts[0].equals("del")){
-                botService.addUserService(chat, mesParts[1]);
-                bot.execute(new SendMessage(chat.id(), "Сервис '" + mesParts[1] + "' подключен"));
-                return "1";
-            }else if(mesParts[0].equals("ret")){
-                bot.execute(new SendMessage(chat.id(), "Вы вернулись к настройке своих сервисов"));
-                return "1";
-            }else{
-                bot.execute(new SendMessage(chat.id(), "Извините, я вас не понял"));
-                bot.execute(new SendMessage(chat.id(), "Выберите одно из доступных действий с помощью кнопок"));
-                return "3";
+            switch (mesParts[0]) {
+                case "add":
+                    botService.addUserService(chat, mesParts[1]);
+                    bot.execute(new SendMessage(chat.id(), "Сервис '" + mesParts[1] + "' подключен"));
+                    goToStage("1");
+                    doWork(p);
+                    return "2";
+                case "ret":
+                    bot.execute(new SendMessage(chat.id(), "Вы вернулись к настройке своих сервисов"));
+                    goToStage("1");
+                    doWork(p);
+                    return "2";
+                default:
+                    bot.execute(new SendMessage(chat.id(), "Извините, я вас не понял"));
+                    bot.execute(new SendMessage(chat.id(), "Выберите одно из доступных действий с помощью кнопок"));
+                    return "3";
             }
         });
 
