@@ -153,7 +153,9 @@ public class BotUserService {
         BotUser bUser = botUserRepository.findByChatId(chat.id()).orElseThrow(()-> new ResourceNotFound("Пользователь с идентификатором чата '" + chat.id() + "' не найден"));
         AllowService aServ = allowServicesService.findByName(servName);
         if(aServ!=null){
-            bUser.getUserServices().add(aServ);
+            if(bUser.getUserServices().indexOf(aServ)==-1) {
+                bUser.getUserServices().add(aServ);
+            }
             res = true;
         }
         botUserRepository.save(bUser);

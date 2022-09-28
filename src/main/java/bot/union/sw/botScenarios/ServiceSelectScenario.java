@@ -74,6 +74,13 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
                     doWork(p);
                     return "2";
                 case "add":
+                    if(mesParts.length>1 && !mesParts[1].isEmpty()){
+                        botService.addUserService(chat, mesParts[1]);
+                        bot.execute(new SendMessage(chat.id(), "Сервис '" + mesParts[1] + "' подключен"));
+                        goToStage("1");
+                        doWork(p);
+                        return "2";
+                    }
                     bot.execute(new SendMessage(chat.id(), "<---"));
                     bot.execute(new SendMessage(chat.id(), "*Список доступных для подключения сервисов*").parseMode(ParseMode.MarkdownV2));
                     List<AllowService> servicesList = botService.findAllowServices(chat);
@@ -119,7 +126,7 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
                     return "2";
                 default:
                     bot.execute(new SendMessage(chat.id(), "Извините, я вас не понял"));
-                    bot.execute(new SendMessage(chat.id(), "Выберите одно из доступных действий с помощью кнопок"));
+                    bot.execute(new SendMessage(chat.id(), "Выберите выберите сервис для добавления"));
                     return "3";
             }
         });
