@@ -12,6 +12,7 @@ import java.util.List;
 public class BotUserDto {
 
     private Long id;
+    private Long chatId;
     private String name;
     private String email;
     private String login;

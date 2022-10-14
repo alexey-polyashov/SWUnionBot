@@ -15,6 +15,7 @@ import bot.union.sw.repository.RoleRepository;
 import com.pengrad.telegrambot.model.Chat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class BotUserService {
     private final RoleRepository roleRepository;
     private final BotUserRepository botUserRepository;
     private final AllowServicesService allowServicesService;
+    private final PasswordEncoder passwordEncoder;
 
 
     public BotUser getUserByString(String identifier){
@@ -78,6 +80,9 @@ public class BotUserService {
 
     public Long addBotUser(NewBotUserDto botUserDto) {
         BotUser botUser = botUserMapper.toModel(botUserDto);
+        if(botUserDto.getPassword()!=null && !botUserDto.getPassword().isEmpty()){
+            botUser.setPassword(passwordEncoder.encode(botUserDto.getPassword()));
+        }
         botUserRepository.save(botUser);
         return botUser.getId();
     }
@@ -160,5 +165,14 @@ public class BotUserService {
         }
         botUserRepository.save(bUser);
         return res;
+    }
+
+    @Transactional
+    public void setPassword(Long userId, String password){
+        String hashPassword = passwordEncoder.encode(password);
+        BotUser oldBotUser = botUserRepository.findById(userId).orElseThrow(
+                ()->new ResourceNotFound("Пользователь с id '" + userId + "' не найден"));
+        oldBotUser.setPassword(hashPassword);
+        botUserRepository.save(oldBotUser);
     }
 }

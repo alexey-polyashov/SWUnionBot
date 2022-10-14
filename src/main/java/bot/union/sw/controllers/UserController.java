@@ -1,5 +1,6 @@
 package bot.union.sw.controllers;
 
+import bot.union.sw.entities.BotUser;
 import bot.union.sw.entities.dto.BotUserDto;
 import bot.union.sw.entities.dto.BotUserUpdateDto;
 import bot.union.sw.entities.dto.NewBotUserDto;
@@ -27,6 +28,11 @@ public class UserController {
     @PutMapping()
     public Long newUser(@RequestBody BotUserUpdateDto botUserDto){
         return botUserService.saveBotUser(botUserDto);
+    }
+
+    @PutMapping("/{userId}/password")
+    public void setPassword(@PathVariable(name="userId") Long userId, @RequestBody String newPassword){
+        botUserService.setPassword(userId, newPassword);
     }
 
     @GetMapping("/{userId}")

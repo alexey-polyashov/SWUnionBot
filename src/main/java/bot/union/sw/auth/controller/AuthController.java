@@ -1,4 +1,4 @@
-package bot.union.sw.controllers;
+package bot.union.sw.auth.controller;
 
 import bot.union.sw.services.BotUserService;
 import lombok.RequiredArgsConstructor;
@@ -13,5 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final BotUserService botUserService;
+
+
 
 }

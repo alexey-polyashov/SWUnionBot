@@ -2,7 +2,6 @@ package bot.union.sw.repository;
 
 import bot.union.sw.entities.AllowService;
 import bot.union.sw.entities.BotUser;
-import com.pengrad.telegrambot.model.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +15,7 @@ public interface BotUserRepository extends JpaRepository<BotUser, Long> {
 
     Optional<BotUser> findByEmail(String identifier);
     Optional<BotUser> findByDomainName(String identifier);
+    Optional<BotUser> findByLogin(String identifier);
     Optional<BotUser> findByChatId(Long chatId);
 
     List<BotUser> findByUserServices(AllowService service);
