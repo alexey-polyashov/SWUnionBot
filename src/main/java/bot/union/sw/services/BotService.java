@@ -14,6 +14,7 @@ import com.github.kshashov.telegram.api.TelegramRequest;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -96,7 +97,7 @@ public class BotService {
         }
     }
 
-    private void checkScenStack(){
+    public void checkScenStack(){
         if (!scenarioStack.empty()){
             Scenario<String, StageParams> sc = scenarioStack.peek();
             if(sc.getCurrentStage()==null){
@@ -105,10 +106,33 @@ public class BotService {
         }
     }
 
+    public void setDefaultMenu(TelegramBot bot, Chat chat, BotUser botUser){
+        if(botUser==null){
+            //for new users
+            Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                    new String[]{CommonScenario.str_main_menu_authorization},
+                    new String[]{CommonScenario.str_main_menu_help})
+                    .oneTimeKeyboard(true)   // optional
+                    .resizeKeyboard(true)    // optional
+                    .selective(true);        // optional
+            bot.execute(new SendMessage(chat, "").replyMarkup(replyKeyboardMarkup));
+        }else {
+            //for authorised users
+            Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                    new String[]{CommonScenario.str_main_menu_new_querry, CommonScenario.str_main_menu_my_querries},
+                    new String[]{CommonScenario.str_main_menu_settings, CommonScenario.str_main_menu_help})
+                    .oneTimeKeyboard(true)   // optional
+                    .resizeKeyboard(true)    // optional
+                    .selective(true);        // optional
+            bot.execute(new SendMessage(chat, "").replyMarkup(replyKeyboardMarkup));
+        }
+    }
+
     public void doWork(String mes, TelegramBot bot, Chat chat, Message fullMes, TelegramRequest request, String opt) throws Throwable {
 
         if(scenarioStack.empty()) {
             Optional<BotUser> botUser = botUserService.getUserByChat(chat);
+
             if (botUser.isEmpty()) {
                 Scenario<String, StageParams> sc = startScenario("NewUserConnectedScenario", currentChat);
                 StageParams p = StageParams.builder().bot(bot).chat(chat).message(fullMes).request(request).build();
@@ -125,10 +149,9 @@ public class BotService {
                 }
             }
             else{
-                bot.execute(new SendMessage(chat.id(), "Здравствуйте!"));
-                bot.execute(new SendMessage(chat.id(), "Я бот компании Спецобъединение \"Северо-Запад\""));
-                bot.execute(new SendMessage(chat.id(), "Я пока ничего не умею, но скоро меня научат"));
+                bot.execute(new SendMessage(chat.id(), "Я вас не понял. Выберите действие в меню."));
             }
+            setDefaultMenu(bot, chat, botUser.get());
         }else{
             Scenario<String, StageParams> sc = scenarioStack.peek();
             StageParams p = StageParams.builder().bot(bot).chat(chat).message(fullMes).request(request).build();

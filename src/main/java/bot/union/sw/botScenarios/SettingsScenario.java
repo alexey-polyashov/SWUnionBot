@@ -13,17 +13,16 @@ import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
+public class SettingsScenario extends CommonScenario<String, StageParams> {
 
     private ScenarioService scenarioService;
     private BotService botService;
 
-    public ServiceSelectScenario() {
+    public SettingsScenario() {
         super();
         setScenarioId("ServiceSelectScenario");
     }
@@ -43,25 +42,16 @@ public class ServiceSelectScenario extends CommonScenario<String, StageParams> {
         SimpleScenarioStage<String, StageParams> st1 = new SimpleScenarioStage<>("1", (p) -> {
             Chat chat = p.getChat();
             TelegramBot bot = p.getBot();
-            bot.execute(new SendMessage(chat.id(), "<- Управление сервисами"));
-            bot.execute(new SendMessage(chat.id(), "*Список подключенных у вас сервисов*").parseMode(ParseMode.MarkdownV2));
-            List<AllowService> servicesList = botService.findAllUserServices(chat);
-            InlineKeyboardButton kbAddServ = new  InlineKeyboardButton("+ Подключение сервиса").callbackData("addServices");
-            InlineKeyboardButton kbDelServ = new  InlineKeyboardButton("+ Отключение сервиса").callbackData("delServices");
-            InlineKeyboardButton kbReturn = new  InlineKeyboardButton("< Возврат").callbackData("ret");
-            if(servicesList.size()==0){
-                bot.execute(new SendMessage(chat.id(),"*У вас нет подключенных сервисов!*").parseMode(ParseMode.MarkdownV2).replyMarkup(new InlineKeyboardMarkup(kbAddServ,kbReturn)));
-            }else{
-                int lineCounter = servicesList.size();
-                for (AllowService aServ: servicesList) {
-                    lineCounter--;
-                    SendMessage sm = new SendMessage(chat.id(), "<u>" + aServ.getName() + "</u> - <i>" + aServ.getDescription() + "</i>").parseMode(ParseMode.HTML);
-                    if(lineCounter==0){
-                            sm.replyMarkup(new InlineKeyboardMarkup(kbAddServ, kbDelServ,kbReturn));
-                    }
-                    bot.execute(sm);
-                }
-            }
+            bot.execute(new SendMessage(chat.id(), "<- Вы перешли в меню настроек"));
+            //prepare settings menu
+            Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                    new String[]{"Упарвление моими сервисами"},
+                    new String[]{"Отключиться от чата"},
+                    new String[]{"Главное меню"})
+                    .oneTimeKeyboard(true)   // optional
+                    .resizeKeyboard(true)    // optional
+                    .selective(true);        // optional
+            bot.execute(new SendMessage(chat, "").replyMarkup(replyKeyboardMarkup));
             return "2";
         });
 

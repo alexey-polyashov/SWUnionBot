@@ -1,7 +1,6 @@
 package bot.union.sw.botScenarios;
 
 import bot.union.sw.common.scenariodefine.simplescenario.SimpleScenarioStage;
-import bot.union.sw.entities.BotUser;
 import bot.union.sw.exceptions.SWUException;
 import bot.union.sw.services.BotService;
 import bot.union.sw.services.ScenarioService;
@@ -9,21 +8,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
+import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
-public class NewUserConnectedScenario extends CommonScenario<String, StageParams> {
+public class NewQuerriesScenario extends CommonScenario<String, StageParams> {
 
     private ScenarioService scenarioService;
     private BotService botService;
 
-    public NewUserConnectedScenario() {
+    public NewQuerriesScenario() {
         super();
-        setScenarioId("NewUserConnectedScenario");
+        setScenarioId("ServiceSelectScenario");
     }
 
     public void setScenarioService(ScenarioService scenarioService){
@@ -34,51 +33,32 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
         this.botService = botService;
     }
 
+
     @Override
     public void init() {
 
         SimpleScenarioStage<String, StageParams> st1 = new SimpleScenarioStage<>("1", (p) -> {
             Chat chat = p.getChat();
             TelegramBot bot = p.getBot();
-            bot.execute(new SendMessage(chat.id(), "Добро пожаловать!"));
-            bot.execute(new SendMessage(chat.id(), "Введите адрес электронной почты (пример apetrov@mikron.ru), или имя доменной учетной записи (пример apetrov)"));
-            return "3";
+            bot.execute(new SendMessage(chat.id(), "<- Вы перешли в меню настроек"));
+            //prepare settings menu
+            Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                    new String[]{"Получить справку"},
+                    new String[]{"ИТ поддержка"},
+                    new String[]{"Главное меню"})
+                    .oneTimeKeyboard(true)   // optional
+                    .resizeKeyboard(true)    // optional
+                    .selective(true);        // optional
+            bot.execute(new SendMessage(chat, "").replyMarkup(replyKeyboardMarkup));
+            return "2";
         });
 
         SimpleScenarioStage<String, StageParams> st2 = new SimpleScenarioStage<>("2", (p) -> {
-            Chat chat = p.getChat();
-            TelegramBot bot = p.getBot();
-            bot.execute(new SendMessage(chat.id(), "Повторите ввод."));
-            bot.execute(new SendMessage(chat.id(), "Введите адрес электронной почты (пример apetrov@mikron.ru), или имя доменной учетной записи (пример apetrov)"));
-            return "3";
-        });
-
-        SimpleScenarioStage<String, StageParams> st3 = new SimpleScenarioStage<>("3", (p) -> {
-            Chat chat = p.getChat();
-            TelegramBot bot = p.getBot();
-            bot.execute(new SendMessage(chat.id(), "Выполняю поиск ..."));
-            //поиск пользователя
-            Optional<BotUser> botUser = botService.getUser(p.getMessage().text(), p.getChat());
-            String[] retVal = {null};
-            botUser.ifPresentOrElse(
-                    (v)->{
-                        v.setChatId(chat.id());
-                        botService.saveBotUser(v);
-                        bot.execute(new SendMessage(chat.id(), "Вы зарегистрированы"));
-                        bot.execute(new SendMessage(chat.id(), "Используйте меню для выбора действий"));
-                        bot.execute(new SendMessage(chat.id(), "В каждом разделе меню есть помощь"));
-                    },
-                    () -> {
-                        bot.execute(new SendMessage(chat.id(), "Указанные вами идентификационные данные не соответствуют ни одному из пользователей. Повторите попытку."));
-                        retVal[0] = "2";
-                    }
-                    );
-            return retVal[0];
+            return null;
         });
 
         addStage(st1);
         addStage(st2);
-        addStage(st3);
 
     }
 
@@ -105,7 +85,7 @@ public class NewUserConnectedScenario extends CommonScenario<String, StageParams
     @Override
     public void load(long id) {
         String jsonData = "";
-        Map<String, String> mapped = new HashMap<>();
+        Map<String, String> mapped;
         jsonData = scenarioService.restoreScenario(botService.getCurrentChat().id(), this);
         if(!jsonData.isEmpty()){
             ObjectMapper objectMapper = new ObjectMapper();
